@@ -1,0 +1,14 @@
+﻿Build started 11/26/2016 11:00:52 AM.
+     1>Project "E:\Projects\SmartDiskCleaner\FilesystemFacade\FilesystemFacade.vcxproj" on node 3 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /IE:\Projects\SmartDiskCleaner\Core /IE:\Projects\SmartDiskCleaner\DatabaseFacade /IE:\Projects\SmartDiskCleaner\FilesystemFacade /IE:\Projects\SmartDiskCleaner\SmartDiskCleanerLib /IE:\Projects\SmartDiskCleaner\Utilities /IE:\Libs\boost_1_62_0 /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\Utilities\StringConversion.cpp
+         StringConversion.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"E:\Projects\SmartDiskCleaner\SmartDiskCleanerCpp\Debug\FilesystemFacade.lib" /NOLOGO Debug\StringConversion.obj
+         Debug\FileSearcher.obj
+         FilesystemFacade.vcxproj -> E:\Projects\SmartDiskCleaner\SmartDiskCleanerCpp\Debug\FilesystemFacade.lib
+     1>Done Building Project "E:\Projects\SmartDiskCleaner\FilesystemFacade\FilesystemFacade.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:02.90
