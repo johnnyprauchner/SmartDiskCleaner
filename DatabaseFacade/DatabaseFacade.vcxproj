@@ -11,11 +11,10 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DatabaseAdapter.cpp" />
     <ClCompile Include="DatabaseFacade.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="DatabaseAdapter.h" />
+    <ClInclude Include="SQLCommandFactory.h" />
     <ClInclude Include="DatabaseFacade.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

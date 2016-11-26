@@ -1,5 +1,6 @@
 #include "DatabaseFacade.h"
 #include "File.h"
+#include "SQLCommandFactory.h"
 #include <iostream>
 #include <sstream>
 #include <boost/filesystem.hpp>
@@ -39,7 +40,7 @@ bool DatabaseFacade::createDirectoryStructure( )
     {
         if( boost::filesystem::create_directories( dir ) )
         {
-            std::cout << "DatabaseFacade::createDirectoryStructure: " << dir.string() << " - Success" << "\n";
+            std::cout << "DatabaseFacade::createDirectoryStructure: " << dir.string( ) << " - Success" << "\n";
         }
         else
         {
@@ -52,12 +53,12 @@ bool DatabaseFacade::createDirectoryStructure( )
         result = false;
         std::cout << "DatabaseFacade::createDirectoryStructure - Could not create directory " << dir.string( ) << ". Exception " << e.what( ) << "\n";
     }
-        
+
     return result;
 }
 
 
-DatabaseFacade::DatabaseFacade(  )    
+DatabaseFacade::DatabaseFacade( )
 {
     createDirectoryStructure( );
     openDatabase( );
@@ -71,7 +72,7 @@ bool DatabaseFacade::openDatabase( )
     {
         try
         {
-            m_database = std::make_unique<SQLite::Database>( stringStream.str() , SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE );
+            m_database = std::make_unique<SQLite::Database>( stringStream.str( ) , SQLite::OPEN_READWRITE | SQLite::OPEN_CREATE );
         }
         catch( std::exception& ex )
         {
@@ -89,7 +90,7 @@ bool DatabaseFacade::recreateDatabaseAndTable( )
     try
     {
         m_database->exec( "DROP TABLE IF EXISTS Files" );
-        m_database->exec( "CREATE TABLE Files (Name STRING Path STRING Size INTEGER Extension STRING Year INTEGER Month Integer Day INTEGER TypeDescription STRING)" );
+        m_database->exec( "CREATE TABLE Files (Name STRING, Path STRING, Size INTEGER, Extension STRING, Year INTEGER, Month INTEGER, Day INTEGER, TypeDescription STRING)" );
     }
     catch( SQLite::Exception& ex )
     {
@@ -99,9 +100,19 @@ bool DatabaseFacade::recreateDatabaseAndTable( )
     return result;
 }
 
-bool DatabaseFacade::recreateDatabase( std::list<File> files )
+bool DatabaseFacade::recreateDatabase( )
 {
     return recreateDatabaseAndTable( );
+}
+
+bool DatabaseFacade::insert( std::list<File> files )
+{
+    bool result = true;
+    for( File file : files )
+    { 
+        result = insert( file );
+    }
+    return result;
 }
 
 bool DatabaseFacade::insert( File file )
@@ -110,18 +121,48 @@ bool DatabaseFacade::insert( File file )
     try
     {
         SQLite::Transaction transaction( *m_database );
+        std::string command = SQLCommandFactory::createInsertCommand( file );
+        //std::string command = "INSERT INTO Files VALUES (\"delMameClones.bat\", \"C:\\temp\", 77590, \".bat\", 2014, 8, 10, \"Windows Batch File\")";
 
-        std::stringstream command;
-        command << "INSERT INTO Files VALUES (" << file.name << ", " << file.path << ", " << file.sizeInBytes << ", " << file.extension << ", " << file.lastAccessedYear << ", " << file.lastAcessedMonth << ", " << file.lastAccessedDay << ", " << file.typeDescription << ")";
-        int count = m_database->exec( command.str() );
+        int count = m_database->exec( command );
         result = ( count > 0 ) ? true : false;
-        
+
         transaction.commit( );
     }
     catch( std::exception& e )
     {
         std::cout << "DatabaseFacade::insert - SQLite exception: " << e.what( ) << std::endl;
         result = false;
+    }
+    return result;
+}
+
+std::list<File> DatabaseFacade::listAllFiles( )
+{
+    std::list<File> result;
+    try
+    {
+        std::string command = SQLCommandFactory::createListAllCommand( );
+        SQLite::Statement query( *m_database , command );
+
+        while( query.executeStep( ) )
+        {
+            File file;
+            file.name = query.getColumn( 0 );
+            file.path = query.getColumn( 1 );
+            file.sizeInBytes = query.getColumn( 2 );
+            file.extension = query.getColumn( 3 );
+            file.lastAccessedYear = query.getColumn( 4 );
+            file.lastAcessedMonth = query.getColumn( 5 );
+            file.lastAccessedDay = query.getColumn( 6 );
+            file.typeDescription = query.getColumn( 7 );
+
+            result.push_back( file );
+        }
+    }
+    catch( std::exception& e )
+    {
+        std::cout << "DatabaseFacade::listAllFiles - SQLite exception: " << e.what( ) << std::endl;
     }
     return result;
 }

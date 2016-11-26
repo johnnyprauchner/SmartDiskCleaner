@@ -18,7 +18,6 @@ struct File
 
     static void printToStdOutFull( std::list<File> files )
     {
-        std::cout << "\n\nFile list:" << std::endl;
         for( File file : files )
         {
             std::cout << "\tName: " << file.name << std::endl;
@@ -34,7 +33,6 @@ struct File
 
     static void printToStdOutShort( std::list<File> files )
     {
-        std::cout << "\n\nFile list:" << std::endl;
         for( File file : files )
         {
             std::cout << "\t" << file.path << "\\" << file.name << std::endl;

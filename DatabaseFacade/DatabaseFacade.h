@@ -14,11 +14,12 @@ namespace SmartDiskCleaner
         static std::shared_ptr<DatabaseFacade> create( );
         virtual ~DatabaseFacade( );
 
-        bool recreateDatabase( std::list<File> files);
+        bool recreateDatabase( );
         bool insert( std::list<File> file );
         bool insert( File file);
         bool remove( std::list<File> files );
         bool remove( File file);
+        std::list<File> listAllFiles( );
 
     private:
         DatabaseFacade( );

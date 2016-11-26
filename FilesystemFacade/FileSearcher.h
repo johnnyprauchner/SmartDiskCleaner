@@ -14,6 +14,8 @@ namespace SmartDiskCleaner
     private:
         File FileSearcher::createFile( boost::filesystem::path path );
         void FileSearcher::listFiles( boost::filesystem::path path , std::list<File> &result );
+
+        boost::filesystem::recursive_directory_iterator createRecursiveIterator( boost::filesystem::path path );
     };
 
     typedef std::shared_ptr<FileSearcher> FileSearcherPtr;

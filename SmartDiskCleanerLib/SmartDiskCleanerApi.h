@@ -15,6 +15,7 @@ namespace SmartDiskCleaner
 
         //std::list<std::string> listFileNames( );
         std::list<File> listFiles( );
+        std::list<File> listFiles( const std::string& startingPath );
     
     private:
         SmartDiskCleanerApi( int numThreads = 0 );
