@@ -19,9 +19,9 @@ namespace SmartDiskCleaner
         std::string extension;
         std::string typeDescription;
 
-        static void printToStdOutFull( std::list<File> files )
+        static void printToStdOutFull( std::shared_ptr<std::list<File>> files )
         {
-            for( File file : files )
+            for( File file : *files )
             {
                 std::cout << "\tName: " << file.name << std::endl;
                 std::cout << "\tPath: " << file.path << std::endl;
@@ -34,9 +34,9 @@ namespace SmartDiskCleaner
             }
         }
 
-        static void printToStdOutShort( std::list<File> files )
+        static void printToStdOutShort( std::shared_ptr<std::list<File>> files )
         {
-            for( File file : files )
+            for( File file : *files )
             {
                 std::cout << "\t" << file.path << "\\" << file.name << std::endl;
             }

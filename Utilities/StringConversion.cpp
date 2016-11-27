@@ -1,8 +1,8 @@
-#include "StringConversion.h"
 #include <windows.h>
 #include <codecvt>
+#include "StringConversion.h"
 
-using namespace StringConversion;
+using namespace SmartDiskCleaner;
 
 std::wstring StringConversion::stringToWideString( const std::string& string )
 {

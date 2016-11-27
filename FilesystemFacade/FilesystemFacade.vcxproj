@@ -12,10 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Utilities\StringConversion.cpp" />
+    <ClCompile Include="FileDeleter.cpp" />
     <ClCompile Include="FileSearcher.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Utilities\FileUtil.h" />
     <ClInclude Include="..\Utilities\StringConversion.h" />
+    <ClInclude Include="FileDeleter.h" />
     <ClInclude Include="FileSearcher.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

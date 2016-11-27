@@ -92,6 +92,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\DatabaseFacade\DatabaseFacade.cpp" />
+    <ClCompile Include="..\FilesystemFacade\FileDeleter.cpp" />
     <ClCompile Include="..\FilesystemFacade\FileSearcher.cpp" />
     <ClCompile Include="..\SmartDiskCleanerLib\SmartDiskCleanerApi.cpp" />
     <ClCompile Include="..\Utilities\StringConversion.cpp" />

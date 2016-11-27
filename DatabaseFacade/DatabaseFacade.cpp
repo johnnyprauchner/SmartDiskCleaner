@@ -1,9 +1,9 @@
-#include "DatabaseFacade.h"
-#include "File.h"
-#include "SQLCommandFactory.h"
 #include <iostream>
 #include <sstream>
 #include <boost/filesystem.hpp>
+#include "DatabaseFacade.h"
+#include "File.h"
+#include "SQLCommandFactory.h"
 
 using namespace SmartDiskCleaner;
 

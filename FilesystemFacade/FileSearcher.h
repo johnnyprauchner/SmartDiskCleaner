@@ -15,7 +15,6 @@ namespace SmartDiskCleaner
         FileListPtr listFiles( const std::string& startingPath );
 
     private:
-        File createFile( boost::filesystem::path path );
         void listFiles( boost::filesystem::path path );
         void addFilesFromStartingPath( const std::string& startingPath );
         boost::filesystem::recursive_directory_iterator createRecursiveIterator( boost::filesystem::path path );

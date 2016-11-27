@@ -3,9 +3,12 @@
   <ItemGroup>
     <ClCompile Include="FileSearcher.cpp" />
     <ClCompile Include="..\Utilities\StringConversion.cpp" />
+    <ClCompile Include="FileDeleter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FileSearcher.h" />
     <ClInclude Include="..\Utilities\StringConversion.h" />
+    <ClInclude Include="FileDeleter.h" />
+    <ClInclude Include="..\Utilities\FileUtil.h" />
   </ItemGroup>
 </Project>

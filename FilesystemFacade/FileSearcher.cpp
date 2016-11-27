@@ -1,14 +1,15 @@
-#include "FileSearcher.h"
 #include <iostream>
 #include <boost/range/iterator_range.hpp>
 #include <windows.h>
 #include <thread>
 #include "StringConversion.h"
+#include "FileUtil.h"
+#include "FileSearcher.h"
 
 using namespace SmartDiskCleaner;
 
 FileSearcher::FileSearcher( )
-    :m_fileList( std::make_shared<std::list<File>>() )
+    :m_fileList( std::make_shared<std::list<File>>( ) )
 {
 
 }
@@ -33,13 +34,13 @@ FileListPtr FileSearcher::listFiles( const std::string& startingPath )
     std::vector<std::thread> threads;
     for( auto& entry : boost::make_iterator_range( boost::filesystem::directory_iterator( startingPath ) , { } , { } ) )
     {
-        if( boost::filesystem::exists( entry ) && boost::filesystem::is_directory( entry ) )
+        if( FileUtil::isDirectory( entry ) )
         {
             try
             {
                 std::thread thread( [ = ] { listFiles( entry ); } );
 
-                threads.push_back( std::move(thread) );
+                threads.push_back( std::move( thread ) );
             }
             catch( const boost::filesystem::filesystem_error& ex )
             {
@@ -59,16 +60,15 @@ FileListPtr FileSearcher::listFiles( const std::string& startingPath )
 
 void FileSearcher::addFilesFromStartingPath( const std::string& startingPath )
 {
-    if( boost::filesystem::is_directory( startingPath ) ) 
+    if( boost::filesystem::is_directory( startingPath ) )
     {
-
         for( auto& entry : boost::make_iterator_range( boost::filesystem::directory_iterator( startingPath ) , { } , { } ) )
         {
-            if( boost::filesystem::exists( entry ) && !boost::filesystem::is_directory( entry ) )
+            if( FileUtil::isFile( entry ) )
             {
                 try
                 {
-                    File  file = createFile( entry );
+                    File  file = FileUtil::createFile( entry );
                     m_fileList->push_back( file );
                 }
                 catch( boost::filesystem::filesystem_error& ex )
@@ -87,13 +87,13 @@ void FileSearcher::listFiles( boost::filesystem::path path )
 
     while( it != end )
     {
-        if( exists( *it ) && !boost::filesystem::is_directory( *it ) )
+        if( FileUtil::isFile( *it ) )
         {
             try
             {
                 std::unique_lock<std::mutex> lock( m_mutex );
 
-                File  file = createFile( *it );
+                File  file = FileUtil::createFile( *it );
                 m_fileList->push_back( file );
             }
             catch( boost::filesystem::filesystem_error& ex )
@@ -109,21 +109,21 @@ void FileSearcher::listFiles( boost::filesystem::path path )
 
         try
         {
-            ++it; 
+            ++it;
         }
         catch( std::exception& ex )
         {
             std::cout << "FileSearcher::listFiles - Error incrementing iterator: " << ex.what( ) << std::endl;
             it.no_push( );
-            try 
-            { 
-                ++it; 
+            try
+            {
+                ++it;
             }
-            catch( ... ) 
-            { 
+            catch( ... )
+            {
                 std::cout << "FileSearcher::listFiles - Fatal (unknown) error incrementing iterator: " << std::endl;
-                return; 
-            } 
+                return;
+            }
         }
     }
 
@@ -145,62 +145,6 @@ boost::filesystem::recursive_directory_iterator SmartDiskCleaner::FileSearcher::
 }
 
 
-File FileSearcher::createFile( boost::filesystem::path path )
-{
-    File file;
-    file.name = path.filename( ).string( );
-    file.path = path.parent_path( ).string( );
-    file.extension = path.extension( ).string( );
-    file.sizeInBytes = boost::filesystem::file_size( path );
 
-    std::wstring pathWideString = StringConversion::stringToWideString( path.string( ) );
-
-    HANDLE hFile = CreateFile( pathWideString.c_str( ) ,  // file name 
-        GENERIC_READ ,          // open for reading 
-        0 ,                     // do not share 
-        NULL ,                  // default security 
-        OPEN_EXISTING ,         // existing file only 
-        FILE_ATTRIBUTE_NORMAL , // normal file 
-        NULL );                 // no template 
-    if( hFile == INVALID_HANDLE_VALUE )
-    {
-        std::cout << "CreateFile failed" << std::endl;
-    }
-
-    FILETIME ftAccess;
-
-    // Retrieve the file times for the file.
-    if( !GetFileTime( hFile , NULL, &ftAccess, NULL ) )
-    {
-        //std::cout << "FileSearcher::createFile - GetFileTime failed - Error:" << GetLastError() << std::endl;
-    }
-    SYSTEMTIME systemTime;
-    FileTimeToSystemTime( &ftAccess , &systemTime );
-
-    file.lastAccessedDay = systemTime.wDay;
-    file.lastAcessedMonth = systemTime.wMonth;
-    file.lastAccessedYear = systemTime.wYear;
-
-    CoInitialize( NULL );
-    SHFILEINFOW sfi = { 0 };
-    DWORD_PTR hr = SHGetFileInfo( pathWideString.c_str( ) ,
-        ( DWORD ) -1 ,
-        &sfi ,
-        sizeof( sfi ) ,
-        SHGFI_TYPENAME );
-
-    if( hr > 0 )
-    {
-        std::wstring typeDescription( sfi.szTypeName );
-        file.typeDescription = StringConversion::wideStringToString( typeDescription );
-    }
-    else
-    {
-        std::cout << "SHGetFileInfo failed. Error: " << GetLastError( ) << std::endl;
-    }
-    CloseHandle( hFile );
-
-    return file;
-}
 
 
