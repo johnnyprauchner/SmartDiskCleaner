@@ -4,39 +4,46 @@
 #include <list>
 #include <iostream>
 #include <ctime>
+#include <memory>
 
-struct File
+namespace SmartDiskCleaner
 {
-    std::string name;
-    std::string path;
-    unsigned long long sizeInBytes;
-    int lastAccessedYear;
-    int lastAcessedMonth;
-    int lastAccessedDay;
-    std::string extension;
-    std::string typeDescription;
-
-    static void printToStdOutFull( std::list<File> files )
+    struct File
     {
-        for( File file : files )
-        {
-            std::cout << "\tName: " << file.name << std::endl;
-            std::cout << "\tPath: " << file.path <<  std::endl;
-            std::cout << "\tExtension: " << file.extension << std::endl;
-            std::cout << "\tType Description" << file.typeDescription << std::endl;
-            std::cout << "\tSize in bytes: " << file.sizeInBytes << std::endl;
-            
-            std::cout << "\tLast Accessed: " << file.lastAccessedDay << "/" << file.lastAcessedMonth << "/" << file.lastAccessedYear << std::endl;
-            std::cout << "\n";
-        }
-    }
+        std::string name;
+        std::string path;
+        unsigned long long sizeInBytes;
+        int lastAccessedYear;
+        int lastAcessedMonth;
+        int lastAccessedDay;
+        std::string extension;
+        std::string typeDescription;
 
-    static void printToStdOutShort( std::list<File> files )
-    {
-        for( File file : files )
+        static void printToStdOutFull( std::list<File> files )
         {
-            std::cout << "\t" << file.path << "\\" << file.name << std::endl;
+            for( File file : files )
+            {
+                std::cout << "\tName: " << file.name << std::endl;
+                std::cout << "\tPath: " << file.path << std::endl;
+                std::cout << "\tExtension: " << file.extension << std::endl;
+                std::cout << "\tType Description" << file.typeDescription << std::endl;
+                std::cout << "\tSize in bytes: " << file.sizeInBytes << std::endl;
+
+                std::cout << "\tLast Accessed: " << file.lastAccessedDay << "/" << file.lastAcessedMonth << "/" << file.lastAccessedYear << std::endl;
+                std::cout << "\n";
+            }
         }
-        std::cout << "\n" << std::endl;
-    }
-};
+
+        static void printToStdOutShort( std::list<File> files )
+        {
+            for( File file : files )
+            {
+                std::cout << "\t" << file.path << "\\" << file.name << std::endl;
+            }
+            std::cout << "\n" << std::endl;
+        }
+    };
+
+    typedef std::shared_ptr<std::list<File>> FileListPtr;
+
+}

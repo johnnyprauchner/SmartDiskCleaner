@@ -26,12 +26,12 @@ SmartDiskCleanerApi::SmartDiskCleanerApi( int numThreads )
     m_fileSearcher = std::make_shared<FileSearcher>( );
 }
 
-std::list<File> SmartDiskCleanerApi::listFiles( )
+FileListPtr SmartDiskCleanerApi::listFiles( )
 {
     return listFiles( "C:\\temp" );
 }
 
-std::list<File> SmartDiskCleanerApi::listFiles( const std::string& startingPath )
+FileListPtr SmartDiskCleanerApi::listFiles( const std::string& startingPath )
 {
     return m_fileSearcher->listFiles( startingPath );
 }

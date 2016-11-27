@@ -105,10 +105,10 @@ bool DatabaseFacade::recreateDatabase( )
     return recreateDatabaseAndTable( );
 }
 
-bool DatabaseFacade::insert( std::list<File> files )
+bool DatabaseFacade::insert( FileListPtr files )
 {
     bool result = true;
-    for( File file : files )
+    for( File file : *files )
     { 
         result = insert( file );
     }
@@ -137,9 +137,9 @@ bool DatabaseFacade::insert( File file )
     return result;
 }
 
-std::list<File> DatabaseFacade::listAllFiles( )
+FileListPtr DatabaseFacade::listAllFiles( )
 {
-    std::list<File> result;
+    FileListPtr result = std::make_shared<std::list<File>>();
     try
     {
         std::string command = SQLCommandFactory::createListAllCommand( );
@@ -157,7 +157,7 @@ std::list<File> DatabaseFacade::listAllFiles( )
             file.lastAccessedDay = query.getColumn( 6 );
             file.typeDescription = query.getColumn( 7 );
 
-            result.push_back( file );
+            result->push_back( file );
         }
     }
     catch( std::exception& e )

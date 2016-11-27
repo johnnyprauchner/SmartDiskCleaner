@@ -1,16 +1,19 @@
 #include "FileSearcher.h"
 #include <iostream>
+#include <boost/range/iterator_range.hpp>
 #include <windows.h>
+#include <thread>
 #include "StringConversion.h"
 
 using namespace SmartDiskCleaner;
 
 FileSearcher::FileSearcher( )
+    :m_fileList( std::make_shared<std::list<File>>() )
 {
 
 }
 
-std::list<File> FileSearcher::listFiles( const std::string& startingPath )
+FileListPtr FileSearcher::listFiles( const std::string& startingPath )
 {
     std::list<File> result;
     if( startingPath == "" )
@@ -25,20 +28,59 @@ std::list<File> FileSearcher::listFiles( const std::string& startingPath )
     {
         throw std::string( "FileSearcher::listFiles - invalid path" );
     }
+    addFilesFromStartingPath( startingPath );
 
-    try
+    std::vector<std::thread> threads;
+    for( auto& entry : boost::make_iterator_range( boost::filesystem::directory_iterator( startingPath ) , { } , { } ) )
     {
-        listFiles( path , result );
-    }
-    catch( const boost::filesystem::filesystem_error& ex )
-    {
-        std::cout << ex.what( ) << '\n';
+        if( boost::filesystem::exists( entry ) && boost::filesystem::is_directory( entry ) )
+        {
+            try
+            {
+                std::thread thread( [ = ] { listFiles( entry ); } );
+
+                threads.push_back( std::move(thread) );
+            }
+            catch( const boost::filesystem::filesystem_error& ex )
+            {
+                std::cout << " FileSearcher::listFiles - error " << ex.what( ) << std::endl;
+            }
+        }
     }
 
-    return result;
+    for( auto&& thread : threads )
+    {
+        thread.join( );
+    }
+
+
+    return m_fileList;
 }
 
-void FileSearcher::listFiles( boost::filesystem::path path , std::list<File> &result )
+void FileSearcher::addFilesFromStartingPath( const std::string& startingPath )
+{
+    if( boost::filesystem::is_directory( startingPath ) ) 
+    {
+
+        for( auto& entry : boost::make_iterator_range( boost::filesystem::directory_iterator( startingPath ) , { } , { } ) )
+        {
+            if( boost::filesystem::exists( entry ) && !boost::filesystem::is_directory( entry ) )
+            {
+                try
+                {
+                    File  file = createFile( entry );
+                    m_fileList->push_back( file );
+                }
+                catch( boost::filesystem::filesystem_error& ex )
+                {
+                    std::cout << "FileSearcher::addFilesFromStartingPath - Error creating file: " << ex.what( ) << std::endl;
+                }
+            }
+        }
+    }
+}
+
+void FileSearcher::listFiles( boost::filesystem::path path )
 {
     boost::filesystem::recursive_directory_iterator it = createRecursiveIterator( path );
     boost::filesystem::recursive_directory_iterator end;
@@ -49,8 +91,10 @@ void FileSearcher::listFiles( boost::filesystem::path path , std::list<File> &re
         {
             try
             {
+                std::unique_lock<std::mutex> lock( m_mutex );
+
                 File  file = createFile( *it );
-                result.push_back( file );
+                m_fileList->push_back( file );
             }
             catch( boost::filesystem::filesystem_error& ex )
             {
@@ -128,7 +172,7 @@ File FileSearcher::createFile( boost::filesystem::path path )
     // Retrieve the file times for the file.
     if( !GetFileTime( hFile , NULL, &ftAccess, NULL ) )
     {
-        std::cout << "FileSearcher::createFile - GetFileTime failed - Error:" << GetLastError() << std::endl;
+        //std::cout << "FileSearcher::createFile - GetFileTime failed - Error:" << GetLastError() << std::endl;
     }
     SYSTEMTIME systemTime;
     FileTimeToSystemTime( &ftAccess , &systemTime );
