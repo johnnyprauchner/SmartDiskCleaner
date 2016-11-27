@@ -12,11 +12,10 @@ int main( int argc , char** argv )
         std::cout << "Usage: SmartDiskCleaner <Path>" << std::endl;
         return -1;
     }
-    SmartDiskCleanerApiPtr api = SmartDiskCleanerApi::create( );
+    SmartDiskCleanerApiPtr api = SmartDiskCleanerApi::getInstance( );
     
-    DatabaseFacadePtr databaseFacade = DatabaseFacade::create( );
+    DatabaseFacadePtr databaseFacade = DatabaseFacade::getInstance( );
     databaseFacade->recreateDatabase( );
-
 
     auto start = std::chrono::system_clock::now( );
     

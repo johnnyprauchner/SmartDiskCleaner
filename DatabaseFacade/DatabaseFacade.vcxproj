@@ -14,6 +14,7 @@
     <ClCompile Include="DatabaseFacade.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="QueryParameters.h" />
     <ClInclude Include="SQLCommandFactory.h" />
     <ClInclude Include="DatabaseFacade.h" />
   </ItemGroup>

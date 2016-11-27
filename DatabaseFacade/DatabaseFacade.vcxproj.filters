@@ -6,5 +6,6 @@
   <ItemGroup>
     <ClInclude Include="DatabaseFacade.h" />
     <ClInclude Include="SQLCommandFactory.h" />
+    <ClInclude Include="QueryParameters.h" />
   </ItemGroup>
 </Project>

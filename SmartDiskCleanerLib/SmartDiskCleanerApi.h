@@ -3,7 +3,7 @@
 #include <memory>
 #include <list>
 #include "File.h"
-#include "FileSearcher.h"
+#include "FileCrawler.h"
 #include "FileDeleter.h"
 
 namespace SmartDiskCleaner
@@ -11,7 +11,7 @@ namespace SmartDiskCleaner
     class SmartDiskCleanerApi
     {
     public:
-        static std::shared_ptr<SmartDiskCleanerApi> create( int numThreads = 0 );
+        static std::shared_ptr<SmartDiskCleanerApi> getInstance( int numThreads = 0 );
         virtual ~SmartDiskCleanerApi( );
 
         //std::list<std::string> listFileNames( );
@@ -24,7 +24,7 @@ namespace SmartDiskCleaner
         SmartDiskCleanerApi( int numThreads = 0 );
         static std::shared_ptr<SmartDiskCleanerApi> m_instance;
         int m_numThreads;
-        FileSearcherPtr m_fileSearcher;
+        FileCrawlerPtr m_fileCrawler;
         FileDeleterPtr m_fileDeleter;
     };
 

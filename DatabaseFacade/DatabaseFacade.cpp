@@ -11,7 +11,7 @@ std::shared_ptr<DatabaseFacade> DatabaseFacade::m_instance = nullptr;
 
 const std::string DatabaseFacade::DATABASE_PATH = "c:\\ProgramData\\SmartDiskCleaner\\db\\";
 
-std::shared_ptr<DatabaseFacade> DatabaseFacade::create( )
+std::shared_ptr<DatabaseFacade> DatabaseFacade::getInstance( )
 {
     if( !m_instance )
     {

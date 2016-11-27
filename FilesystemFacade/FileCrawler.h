@@ -4,15 +4,17 @@
 #include <mutex>
 #include <boost/filesystem.hpp>
 #include "File.h"
+#include "FileCrawlerStatus.h"
 
 namespace SmartDiskCleaner
 {
     
-    class FileSearcher
+    class FileCrawler
     {
     public:
-        FileSearcher( );
+        FileCrawler( );
         FileListPtr listFiles( const std::string& startingPath );
+        FileCrawlerStatus getStatus( );
 
     private:
         void listFiles( boost::filesystem::path path );
@@ -21,8 +23,8 @@ namespace SmartDiskCleaner
 
         FileListPtr m_fileList;
         std::mutex m_mutex;
-
+        FileCrawlerStatus m_status;
     };
 
-    typedef std::shared_ptr<FileSearcher> FileSearcherPtr;
+    typedef std::shared_ptr<FileCrawler> FileCrawlerPtr;
 }

@@ -3,9 +3,10 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="..\SmartDiskCleanerLib\SmartDiskCleanerApi.cpp" />
-    <ClCompile Include="..\FilesystemFacade\FileSearcher.cpp" />
     <ClCompile Include="..\Utilities\StringConversion.cpp" />
     <ClCompile Include="..\DatabaseFacade\DatabaseFacade.cpp" />
     <ClCompile Include="..\FilesystemFacade\FileDeleter.cpp" />
+    <ClCompile Include="..\Utilities\FileUtil.cpp" />
+    <ClCompile Include="..\FilesystemFacade\FileCrawler.cpp" />
   </ItemGroup>
 </Project>

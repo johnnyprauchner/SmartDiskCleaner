@@ -11,15 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\Utilities\FileUtil.cpp" />
     <ClCompile Include="..\Utilities\StringConversion.cpp" />
     <ClCompile Include="FileDeleter.cpp" />
-    <ClCompile Include="FileSearcher.cpp" />
+    <ClCompile Include="FileCrawler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Utilities\FileUtil.h" />
     <ClInclude Include="..\Utilities\StringConversion.h" />
     <ClInclude Include="FileDeleter.h" />
-    <ClInclude Include="FileSearcher.h" />
+    <ClInclude Include="FileCrawler.h" />
+    <ClInclude Include="FileCrawlerStatus.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{FD6C5703-E925-4F05-874B-0F20EF0F125F}</ProjectGuid>
@@ -47,11 +49,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\PropertySheets\BoostLibDebug.props" />
     <Import Project="..\PropertySheets\SmartDiskCleanerIncludes.props" />
+    <Import Project="..\PropertySheets\SQLiteCppLibDebug.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\PropertySheets\BoostLibRelease.props" />
     <Import Project="..\PropertySheets\SmartDiskCleanerIncludes.props" />
+    <Import Project="..\PropertySheets\SQLiteCppLibRelease.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />

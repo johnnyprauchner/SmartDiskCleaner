@@ -1,7 +1,6 @@
 #include <iostream>
-#include "FileDeleter.h"
 #include "FileUtil.h"
-
+#include "FileDeleter.h"
 
 using namespace SmartDiskCleaner;
 

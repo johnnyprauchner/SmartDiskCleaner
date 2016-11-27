@@ -11,7 +11,7 @@ namespace SmartDiskCleaner
     class DatabaseFacade
     {
     public:
-        static std::shared_ptr<DatabaseFacade> create( );
+        static std::shared_ptr<DatabaseFacade> getInstance( );
         virtual ~DatabaseFacade( );
 
         bool recreateDatabase( );

@@ -1,11 +1,11 @@
 #include "SmartDiskCleanerApi.h"
-#include "FileSearcher.h"
+#include "FileCrawler.h"
 
 using namespace SmartDiskCleaner;
 
 std::shared_ptr<SmartDiskCleanerApi> SmartDiskCleanerApi::m_instance = nullptr;
 
-std::shared_ptr<SmartDiskCleanerApi> SmartDiskCleanerApi::create( int numThreads )
+std::shared_ptr<SmartDiskCleanerApi> SmartDiskCleanerApi::getInstance( int numThreads )
 {
     if( !m_instance )
     {
@@ -23,13 +23,13 @@ SmartDiskCleanerApi::~SmartDiskCleanerApi( )
 SmartDiskCleanerApi::SmartDiskCleanerApi( int numThreads )
     :m_numThreads( numThreads )
 {
-    m_fileSearcher = std::make_shared<FileSearcher>( );
+    m_fileCrawler = std::make_shared<FileCrawler>( );
     m_fileDeleter = std::make_shared<FileDeleter>( );
 }
 
 FileListPtr SmartDiskCleanerApi::listFiles( const std::string& startingPath )
 {
-    return m_fileSearcher->listFiles( startingPath );
+    return m_fileCrawler->listFiles( startingPath );
 }
 
 bool SmartDiskCleanerApi::deleteFile( const std::string& path )

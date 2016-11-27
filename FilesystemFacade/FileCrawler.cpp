@@ -4,17 +4,18 @@
 #include <thread>
 #include "StringConversion.h"
 #include "FileUtil.h"
-#include "FileSearcher.h"
+#include "FileCrawler.h"
+#include "DatabaseFacade.h"
 
 using namespace SmartDiskCleaner;
 
-FileSearcher::FileSearcher( )
+FileCrawler::FileCrawler( )
     :m_fileList( std::make_shared<std::list<File>>( ) )
 {
 
 }
 
-FileListPtr FileSearcher::listFiles( const std::string& startingPath )
+FileListPtr FileCrawler::listFiles( const std::string& startingPath )
 {
     std::list<File> result;
     if( startingPath == "" )
@@ -58,7 +59,7 @@ FileListPtr FileSearcher::listFiles( const std::string& startingPath )
     return m_fileList;
 }
 
-void FileSearcher::addFilesFromStartingPath( const std::string& startingPath )
+void FileCrawler::addFilesFromStartingPath( const std::string& startingPath )
 {
     if( boost::filesystem::is_directory( startingPath ) )
     {
@@ -74,13 +75,15 @@ void FileSearcher::addFilesFromStartingPath( const std::string& startingPath )
                 catch( boost::filesystem::filesystem_error& ex )
                 {
                     std::cout << "FileSearcher::addFilesFromStartingPath - Error creating file: " << ex.what( ) << std::endl;
+                    m_status.unreadableFiles++;
                 }
             }
+            m_status.fileCount++;
         }
     }
 }
 
-void FileSearcher::listFiles( boost::filesystem::path path )
+void FileCrawler::listFiles( boost::filesystem::path path )
 {
     boost::filesystem::recursive_directory_iterator it = createRecursiveIterator( path );
     boost::filesystem::recursive_directory_iterator end;
@@ -99,7 +102,9 @@ void FileSearcher::listFiles( boost::filesystem::path path )
             catch( boost::filesystem::filesystem_error& ex )
             {
                 std::cout << "FileSearcher::listFiles - Error creating file: " << ex.what( ) << std::endl;
+                m_status.unreadableFiles++;
             }
+            m_status.fileCount++;
         }
 
         if( boost::filesystem::is_directory( *it ) && boost::filesystem::is_symlink( *it ) )
@@ -129,7 +134,7 @@ void FileSearcher::listFiles( boost::filesystem::path path )
 
 }
 
-boost::filesystem::recursive_directory_iterator SmartDiskCleaner::FileSearcher::createRecursiveIterator( boost::filesystem::path path )
+boost::filesystem::recursive_directory_iterator SmartDiskCleaner::FileCrawler::createRecursiveIterator( boost::filesystem::path path )
 {
     boost::filesystem::recursive_directory_iterator it;
     try
@@ -144,7 +149,10 @@ boost::filesystem::recursive_directory_iterator SmartDiskCleaner::FileSearcher::
     return it;
 }
 
-
+FileCrawlerStatus FileCrawler::getStatus( )
+{
+    return m_status;
+}
 
 
 
