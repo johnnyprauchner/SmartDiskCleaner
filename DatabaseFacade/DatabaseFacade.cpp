@@ -166,3 +166,33 @@ FileListPtr DatabaseFacade::listAllFiles( )
     }
     return result;
 }
+
+FileListPtr DatabaseFacade::getFileList( QueryParameters queryParameters )
+{
+    FileListPtr result = std::make_shared<std::list<File>>( );
+    try
+    {
+        std::string command = SQLCommandFactory::createCommand( queryParameters );
+        SQLite::Statement query( *m_database , command );
+
+        while( query.executeStep( ) )
+        {
+            File file;
+            file.name = query.getColumn( 0 );
+            file.path = query.getColumn( 1 );
+            file.sizeInBytes = query.getColumn( 2 );
+            file.extension = query.getColumn( 3 );
+            file.lastAccessedYear = query.getColumn( 4 );
+            file.lastAcessedMonth = query.getColumn( 5 );
+            file.lastAccessedDay = query.getColumn( 6 );
+            file.typeDescription = query.getColumn( 7 );
+
+            result->push_back( file );
+        }
+    }
+    catch( std::exception& e )
+    {
+        std::cout << "DatabaseFacade::getFileList - SQLite exception: " << e.what( ) << std::endl;
+    }
+    return result;
+}

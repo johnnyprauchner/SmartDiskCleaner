@@ -5,6 +5,7 @@
 #include "File.h"
 #include "FileCrawler.h"
 #include "FileDeleter.h"
+#include "QueryParameters.h"
 
 namespace SmartDiskCleaner
 {
@@ -14,9 +15,10 @@ namespace SmartDiskCleaner
         static std::shared_ptr<SmartDiskCleanerApi> getInstance( int numThreads = 0 );
         virtual ~SmartDiskCleanerApi( );
 
-        //std::list<std::string> listFileNames( );
-        FileListPtr listFiles( const std::string& startingPath );
-
+        void recreateDatabase( const std::string& startingPath );
+        FileListPtr getFileList( );
+        FileListPtr getFileList( QueryParameters queryParameters );
+        FileCrawlerStatusPtr getStatus( );
         bool deleteFile( const std::string& path );
         bool deleteFolder( const std::string& path );
     

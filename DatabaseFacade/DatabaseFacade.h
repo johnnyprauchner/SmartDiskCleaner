@@ -5,6 +5,7 @@
 #include <SQLiteCpp/SQLiteCpp.h>
 #include <SQLiteCpp/VariadicBind.h>
 #include "File.h"
+#include "QueryParameters.h"
 
 namespace SmartDiskCleaner
 {
@@ -20,6 +21,7 @@ namespace SmartDiskCleaner
         bool remove( FileListPtr files );
         bool remove( File file);
         FileListPtr listAllFiles( );
+        FileListPtr getFileList( QueryParameters queryParameters );
 
     private:
         DatabaseFacade( );

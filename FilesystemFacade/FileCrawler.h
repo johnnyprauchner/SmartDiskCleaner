@@ -13,17 +13,19 @@ namespace SmartDiskCleaner
     {
     public:
         FileCrawler( );
-        FileListPtr listFiles( const std::string& startingPath );
-        FileCrawlerStatus getStatus( );
+        void recreateDatabase( const std::string& startingPath );
+        FileCrawlerStatusPtr getStatus( );
+        FileListPtr getFileList( );
 
     private:
-        void listFiles( boost::filesystem::path path );
+        void recreateDatabase( boost::filesystem::path path );
         void addFilesFromStartingPath( const std::string& startingPath );
         boost::filesystem::recursive_directory_iterator createRecursiveIterator( boost::filesystem::path path );
 
         FileListPtr m_fileList;
         std::mutex m_mutex;
-        FileCrawlerStatus m_status;
+        FileCrawlerStatusPtr m_status;
+        int m_totalFiles;
     };
 
     typedef std::shared_ptr<FileCrawler> FileCrawlerPtr;

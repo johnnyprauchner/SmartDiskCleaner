@@ -64,5 +64,12 @@ namespace SmartDiskCleaner
             command << "Select * FROM Files " << std::endl;
             return command.str( );
         }
+
+        std::string createCommand( QueryParameters queryParameters )
+        {
+            std::stringstream command;
+            command << "Select * FROM Files " << std::endl;
+            return command.str( );
+        }
     }
 }

@@ -1,4 +1,6 @@
 #include <windows.h>
+#include <stdio.h>
+#include <Strsafe.h>
 #include "FileUtil.h"
 #include "StringConversion.h"
 
@@ -32,7 +34,7 @@ File FileUtil::createFile( boost::filesystem::path path )
         NULL );                 // no template 
     if( hFile == INVALID_HANDLE_VALUE )
     {
-        std::cout << "FileUtil::createFile - CreateFile API failed. Error:" << GetLastError( ) << std::endl;
+        //std::cout << "FileUtil::createFile - CreateFile API failed. Error:" << GetLastError( ) << std::endl;
     }
 
     FILETIME ftAccess;
@@ -64,10 +66,19 @@ File FileUtil::createFile( boost::filesystem::path path )
     }
     else
     {
-        std::cout << "FileUtil::createFile - SHGetFileInfo failed. Error: " << GetLastError( ) << std::endl;
+        //std::cout << "FileUtil::createFile - SHGetFileInfo failed. Error: " << GetLastError( ) << std::endl;
     }
     CloseHandle( hFile );
 
     return file;
 }
 
+int FileUtil::countFiles( boost::filesystem::path path )
+{
+    int count = 0;
+    for( auto it : recursive_directory_range( path ) )
+    {
+        count++;
+    }
+    return count;
+}

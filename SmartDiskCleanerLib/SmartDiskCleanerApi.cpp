@@ -1,5 +1,6 @@
 #include "SmartDiskCleanerApi.h"
 #include "FileCrawler.h"
+#include "DatabaseFacade.h"
 
 using namespace SmartDiskCleaner;
 
@@ -27,17 +28,33 @@ SmartDiskCleanerApi::SmartDiskCleanerApi( int numThreads )
     m_fileDeleter = std::make_shared<FileDeleter>( );
 }
 
-FileListPtr SmartDiskCleanerApi::listFiles( const std::string& startingPath )
+void SmartDiskCleanerApi::recreateDatabase( const std::string& startingPath )
 {
-    return m_fileCrawler->listFiles( startingPath );
+    m_fileCrawler->recreateDatabase( startingPath );
+}
+
+FileListPtr SmartDiskCleanerApi::getFileList( void )
+{
+    return m_fileCrawler->getFileList(  );
 }
 
 bool SmartDiskCleanerApi::deleteFile( const std::string& path )
 {
-    m_fileDeleter->deleteFile( path );
+    return m_fileDeleter->deleteFile( path );
 }
 
 bool SmartDiskCleanerApi::deleteFolder( const std::string& path )
 {
-    m_fileDeleter->deleteFolder( path );
+    return m_fileDeleter->deleteFolder( path );
+}
+
+FileCrawlerStatusPtr SmartDiskCleanerApi::getStatus( )
+{
+    return m_fileCrawler->getStatus( );
+}
+
+FileListPtr SmartDiskCleanerApi::getFileList( QueryParameters queryParameters )
+{
+    DatabaseFacadePtr databaseFacade = DatabaseFacade::getInstance( );
+    return databaseFacade->getFileList( queryParameters );
 }

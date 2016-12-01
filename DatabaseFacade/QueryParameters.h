@@ -76,7 +76,7 @@ namespace SmartDiskCleaner
         
         void fileNameDoesntContain( const std::string& path )
         {
-            m_fileNameDoesntContain;
+            m_fileNameDoesntContain = path;
         }
 
     private:
